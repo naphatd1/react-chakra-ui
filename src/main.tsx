@@ -2,7 +2,7 @@
 import { Provider } from 'react-redux'
 import { store } from './redux-toolkit/store.ts'
 
-import React from 'react'
+// import React from 'react'
 import ReactDOM from 'react-dom/client'
 
 //css
@@ -16,11 +16,11 @@ import { Toaster } from 'react-hot-toast'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <Provider store={store}>
-    <React.StrictMode>
+    {/* <React.StrictMode> */}
       <ChakraProvider>
         <RouterProvider router={route} />
         <Toaster position="bottom-right" />
       </ChakraProvider>
-    </React.StrictMode>
+    {/* </React.StrictMode> */}
   </Provider>
 )
