@@ -21,8 +21,10 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useAppDispatch } from '../redux-toolkit/hooks'
 import { loginThunk } from '../redux-toolkit/auth/auth-slice'
 import { LoginErrorResponse } from '../app-types/login.type'
+import { useNavigate } from 'react-router-dom'
 
 export default function LoginPage() {
+  const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const toast = useToast()
   const schema = yup.object().shape({
@@ -43,7 +45,10 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginFormInput) => {
     try {
       const result = await dispatch(loginThunk(data)).unwrap()
-      console.log(result.access_token)
+      // console.log(result.access_token)
+      if(result.access_token) {
+        navigate('/dashboard')
+      }
     } catch (error: any) {
       let err: LoginErrorResponse = error
       toast({
