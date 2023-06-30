@@ -22,7 +22,7 @@ import {
   ChevronDownIcon,
   ChevronRightIcon,
 } from '@chakra-ui/icons';
-import {  NavLink as Routerlink, useNavigate } from 'react-router-dom';
+import {  NavLink , useNavigate } from 'react-router-dom';
 
 
 export default function AppHeader() {
@@ -56,7 +56,7 @@ const navigate = useNavigate()
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
           <ChakraLink
-          as={Routerlink}
+          as={NavLink}
           to={'/'}
           style={{textDecoration: 'none'}}
           textDecoration='none'
@@ -123,7 +123,7 @@ const DesktopNav = () => {
             <PopoverTrigger>
               <ChakraLink
                 p={2}
-                as={Routerlink}
+                as={NavLink}
                 to={navItem.href}
                 href={navItem.href ?? '#'}
                 fontSize={'sm'}
@@ -134,10 +134,8 @@ const DesktopNav = () => {
                   color: linkHoverColor,
                 }}>
                 {navItem.label}
-                
               </ChakraLink>
             </PopoverTrigger>
-
             {navItem.children && (
               <PopoverContent
                 border={0}
@@ -193,7 +191,6 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
     </ChakraLink>
   );
 };
-
 const MobileNav = () => {
   return (
     <Stack
@@ -201,17 +198,13 @@ const MobileNav = () => {
       p={4}
       display={{ md: 'none' }}>
       {NAV_ITEMS.map((navItem) => (
-       
         <MobileNavItem key={navItem.label} {...navItem}  />
-      
       ))}
     </Stack>
   );
 };
-
 const MobileNavItem = ({ label, children, href }: NavItem) => {
   const { isOpen, onToggle } = useDisclosure();
-
   return (
     <Stack spacing={4} onClick={children && onToggle}>
       <Flex
@@ -238,7 +231,6 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
           />
         )}
       </Flex>
-
       <Collapse in={isOpen} animateOpacity style={{ marginTop: '0!important' }}>
         <Stack
           mt={2}
@@ -249,7 +241,7 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
           align={'start'}>
           {children &&
             children.map((child) => (
-              <ChakraLink as={Routerlink} to={child.href} key={child.label} py={2} href={child.href}>
+              <ChakraLink as={NavLink} to={child.href} key={child.label} py={2} href={child.href}>
                 {child.label}
               </ChakraLink>
             ))}
@@ -281,7 +273,3 @@ const NAV_ITEMS: Array<NavItem> = [
   }
 ];
 
-// interface MobileNavLinkProps {
-//   to: string;
-//   children: ReactNode;
-// }

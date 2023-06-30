@@ -12,13 +12,19 @@ import {
   Text,
   useColorModeValue,
   FormErrorMessage,
+  useToast,
 } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
-import { LoginFormInput } from '../app-type/login-form-input.type'
+import { LoginFormInput } from '../app-types/login-form-input.type'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import toast from 'react-hot-toast'
+import { useAppDispatch } from '../redux-toolkit/hooks'
+import { loginThunk } from '../redux-toolkit/auth/auth-slice'
+import { LoginErrorResponse } from '../app-types/login.type'
+
 export default function LoginPage() {
+  const dispatch = useAppDispatch()
+  const toast = useToast()
   const schema = yup.object().shape({
     email: yup.string().required('ป้อนอีเมล์').email('รูปแบบอีเมล์ไม่ถูกต้อง'),
     password: yup
@@ -32,10 +38,23 @@ export default function LoginPage() {
     formState: { errors, isSubmitting },
   } = useForm<LoginFormInput>({
     resolver: yupResolver(schema),
-    mode: 'onBlur'
+    mode: 'onBlur',
   })
-  const onSubmit = (data: LoginFormInput) => {console.log(data),
-    toast.success('Successfully created!');
+  const onSubmit = async (data: LoginFormInput) => {
+    try {
+      const result = await dispatch(loginThunk(data)).unwrap()
+      console.log(result.access_token)
+    } catch (error: any) {
+      let err: LoginErrorResponse = error
+      toast({
+        title: 'ผลการทำงาน',
+        description: err.message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top-right',
+      })
+    }
   }
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -67,7 +86,10 @@ export default function LoginPage() {
                   {errors.email && errors.email?.message}
                 </FormErrorMessage>
               </FormControl>
-              <FormControl id="password" isInvalid={errors.password ? true : false}>
+              <FormControl
+                id="password"
+                isInvalid={errors.password ? true : false}
+              >
                 <FormLabel>Password</FormLabel>
                 <Input type="password" {...register('password')} />
                 <FormErrorMessage>
@@ -84,8 +106,8 @@ export default function LoginPage() {
                   <Link color={'blue.400'}>Forgot password?</Link>
                 </Stack>
                 <Button
-                isLoading={isSubmitting}
-                loadingText='กำลังเข้าระบบ...'
+                  isLoading={isSubmitting}
+                  loadingText="กำลังเข้าระบบ..."
                   bg={'blue.400'}
                   type="submit"
                   color={'white'}

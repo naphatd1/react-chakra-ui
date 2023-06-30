@@ -1,10 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../store'
 import { login } from '../../services/auth.service'
+import { LoginFormInput } from '../../app-types/login-form-input.type'
+import { LoginErrorResponse, LoginResponse } from '../../app-types/login.type'
 import { AxiosError } from '../../services/http.service'
-import { LoginErrorResponse, LoginResponse } from '../../app-type/login.type'
-import { LoginFormInput } from '../../app-type/login-form-input.type'
 
 export interface AuthState {
   profile: string
@@ -24,6 +23,7 @@ createAsyncThunk<LoginResponse, LoginFormInput, { rejectValue: LoginErrorRespons
         const response = await login(user.email, user.password);
         // console.log(response.data);
         localStorage.setItem('token', JSON.stringify(response.data));
+        console.log(response.data)
         return response.data; 
     } catch (error: any) {
         let err: AxiosError<LoginErrorResponse> = error;
@@ -43,11 +43,11 @@ export const authSlice = createSlice({
       state.email = 'mary@gmail.com Example'
     },
   },
-  extraReducers: (builder) => {
-    builder.addCase(loginThunk.fulfilled, (state, action: PayloadAction<LoginResponse | null>) => {
-        state.loginResponse = action.payload; //กรณีต้องการใช้ global state ถ้าใช้ unwrap เอาออกได้
-    })
-  }
+  // extraReducers: (builder) => {
+  //   builder.addCase(loginThunk.fulfilled, (state, action: PayloadAction<LoginResponse | null>) => {
+  //       state.loginResponse = action.payload; //กรณีต้องการใช้ global state ถ้าใช้ unwrap เอาออกได้
+  //   })
+  // }
 })
 
 // Action creators are generated for each case reducer function
